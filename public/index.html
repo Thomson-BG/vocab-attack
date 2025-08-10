@@ -3,27 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vocab Attack</title>
+    <title>Virtual Mechanic</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="game-container">
-        <div id="score-board">
-            <span>Score: <span id="score">0</span></span>
-            <span>High Score: <span id="high-score">0</span></span>
-            <span>Level: <span id="level">1</span></span>
+        <div id="ui-bar">
+            <div id="word-prompt">Find the: <span id="current-word">...</span></div>
+            <div id="score-display">Score: <span id="score">0</span></div>
+            <div id="timer-display">Time: <span id="timer">60</span></div>
         </div>
-        <div id="game-area">
-            <div id="level-up-notification" style="display: none;">Level Up!</div>
+        <div id="game-board">
+            <div id="diagram-placeholder">
+                <!-- The engine diagram will be a background image here -->
+                <!-- Hotspots will be added by JavaScript into this container -->
+            </div>
+            <!-- Visual feedback (e.g., checkmark or X) will appear here -->
         </div>
-        <input type="text" id="word-input" placeholder="Type words here..." disabled>
+    </div>
+
+    <div id="start-screen">
+        <h1>Virtual Mechanic</h1>
+        <p>Find the car parts on the diagram before time runs out!</p>
         <button id="start-button">Start Game</button>
     </div>
+
     <div id="game-over-screen" style="display: none;">
         <h1>Game Over</h1>
         <p>Your final score is: <span id="final-score">0</span></p>
         <button id="restart-button">Play Again</button>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
