@@ -3,35 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Virtual Mechanic</title>
+    <title>Garage Master</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="game-container">
-        <div id="ui-bar">
-            <div id="word-prompt">Find the: <span id="current-word">...</span></div>
-            <div id="score-display">Score: <span id="score">0</span></div>
-            <div id="timer-display">Time: <span id="timer">60</span></div>
+
+    <div id="loading-screen">Loading...</div>
+
+    <div id="start-screen" style="display:none;">
+        <h1>Garage Master</h1>
+        <p>Diagnose and fix cars to upgrade your garage!</p>
+        <button id="start-button">Start Day</button>
+    </div>
+
+    <div id="game-container" style="display:none;">
+        <div id="garage-view">
+            <img src="assets/garage.svg" id="garage-background" alt="Garage Background" />
+            <img src="assets/car.svg" id="car" alt="Car" />
         </div>
-        <div id="game-board">
-            <div id="diagram-placeholder">
-                <!-- The engine diagram will be a background image here -->
-                <!-- Hotspots will be added by JavaScript into this container -->
+
+        <div id="diagnosis-view" class="modal" style="display:none;">
+            <h2>A new car has arrived!</h2>
+            <p id="problem-description"></p>
+            <div id="quiz-container"></div>
+            <button id="start-repair-button" style="display:none;">Go to Engine Bay</button>
+        </div>
+
+        <div id="engine-bay-view" style="display:none;">
+            <img src="assets/engine_bay.svg" id="engine-bay-background" alt="Engine Bay" />
+            <div id="parts-toolbox">
+                <h3>Toolbox</h3>
+                <!-- Part sprites will be loaded here by JS -->
             </div>
-            <!-- Visual feedback (e.g., checkmark or X) will appear here -->
+        </div>
+
+        <div id="ui-bar">
+            <div>Money: $<span id="money">0</span></div>
+            <div>Time: <span id="timer">120</span></div>
         </div>
     </div>
 
-    <div id="start-screen">
-        <h1>Virtual Mechanic</h1>
-        <p>Find the car parts on the diagram before time runs out!</p>
-        <button id="start-button">Start Game</button>
-    </div>
-
-    <div id="game-over-screen" style="display: none;">
-        <h1>Game Over</h1>
-        <p>Your final score is: <span id="final-score">0</span></p>
-        <button id="restart-button">Play Again</button>
+    <div id="end-day-screen" class="modal" style="display:none;">
+        <h1>Day Over!</h1>
+        <p>Today's Earnings: $<span id="earnings">0</span></p>
+        <p>Total Money: $<span id="total-money">0</span></p>
+        <button id="next-day-button">Start Next Day</button>
     </div>
 
     <script src="script.js"></script>

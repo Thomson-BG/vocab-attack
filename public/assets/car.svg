@@ -1,0 +1,26 @@
+<svg width="400" height="200" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .body { fill: #007bff; stroke: #0056b3; stroke-width: 2; }
+    .window { fill: #adb5bd; stroke: #343a40; stroke-width: 1.5; }
+    .wheel { fill: #343a40; stroke: #212529; stroke-width: 2; }
+    .hubcap { fill: #ced4da; }
+    .light { fill: #ffc107; }
+  </style>
+
+  <!-- Car Body -->
+  <path class="body" d="M 20 120 C 10 120, 10 80, 40 80 L 100 80 L 120 50 L 280 50 L 300 80 L 360 80 C 390 80, 390 120, 380 120 Z" />
+
+  <!-- Car Roof/Windows -->
+  <path class="window" d="M 130 52 L 140 78 L 260 78 L 270 52 Z" />
+
+  <!-- Wheels -->
+  <circle class="wheel" cx="100" cy="120" r="30" />
+  <circle class="hubcap" cx="100" cy="120" r="10" />
+  <circle class="wheel" cx="300" cy="120" r="30" />
+  <circle class="hubcap" cx="300" cy="120" r="10" />
+
+  <!-- Lights -->
+  <rect class="light" x="30" y="85" width="20" height="10" rx="3" />
+  <rect class="light" x="350" y="85" width="20" height="10" rx="3" style="fill:#dc3545;" />
+
+</svg>

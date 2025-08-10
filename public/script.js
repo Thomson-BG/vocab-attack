@@ -1,140 +1,183 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // This is a placeholder data structure.
-    // The coordinates are based on a 900x600 diagram area
-    // and will need to be updated when a real diagram is chosen.
-    // DOM Elements
-    const gameContainer = document.getElementById('game-container');
-    const uiBar = document.getElementById('ui-bar');
-    const currentWordDisplay = document.getElementById('current-word');
-    const scoreDisplay = document.getElementById('score');
-    const timerDisplay = document.getElementById('timer');
-    const gameBoard = document.getElementById('game-board');
-    const diagramPlaceholder = document.getElementById('diagram-placeholder');
+    // --- DOM Elements ---
+    const loadingScreen = document.getElementById('loading-screen');
     const startScreen = document.getElementById('start-screen');
-    const gameOverScreen = document.getElementById('game-over-screen');
+    const gameContainer = document.getElementById('game-container');
+    const garageView = document.getElementById('garage-view');
+    const diagnosisView = document.getElementById('diagnosis-view');
+    const engineBayView = document.getElementById('engine-bay-view');
+    const endDayScreen = document.getElementById('end-day-screen');
     const startButton = document.getElementById('start-button');
-    const restartButton = document.getElementById('restart-button');
-    const finalScoreDisplay = document.getElementById('final-score');
+    const nextDayButton = document.getElementById('next-day-button');
+    const startRepairButton = document.getElementById('start-repair-button');
+    const car = document.getElementById('car');
+    const problemDescription = document.getElementById('problem-description');
+    const quizContainer = document.getElementById('quiz-container');
+    const partsToolbox = document.getElementById('parts-toolbox');
+    const moneyDisplay = document.getElementById('money');
+    const timerDisplay = document.getElementById('timer');
+    const earningsDisplay = document.getElementById('earnings');
+    const totalMoneyDisplay = document.getElementById('total-money');
 
-    // Game State
-    let score = 0;
-    let timer = 60;
+    // --- Game State ---
+    let money = 0;
+    let timer = 120;
     let timerInterval = null;
-    let currentPart = null;
-    let remainingParts = [];
+    let currentProblem = null;
 
+    // --- Game Data ---
+    // In a real game, this would be much larger and more complex.
     const PART_DATA = [
-        { name: 'Radiator',       x: 50,  y: 200, width: 100, height: 250 },
-        { name: 'Battery',        x: 700, y: 50,  width: 150, height: 120 },
-        { name: 'Alternator',     x: 200, y: 400, width: 100, height: 80  },
-        { name: 'Oil Filter',     x: 350, y: 500, width: 70,  height: 70  },
-        { name: 'Spark Plugs',    x: 250, y: 150, width: 200, height: 50  },
-        { name: 'Exhaust Manifold', x: 250, y: 250, width: 250, height: 100 }
+        {
+            id: 'radiator',
+            name: 'Radiator',
+            sprite: 'assets/parts/radiator.svg',
+            problem: 'The car is overheating!',
+            quiz: {
+                question: 'Which part is essential for cooling the engine?',
+                options: ['Battery', 'Radiator', 'Oil Filter'],
+                answer: 'Radiator'
+            }
+        },
+        {
+            id: 'battery',
+            name: 'Battery',
+            sprite: 'assets/parts/battery.svg',
+            problem: 'The car won\'t start and the lights are dim.',
+            quiz: {
+                question: 'What provides the initial electrical power to start the car?',
+                options: ['Alternator', 'Spark Plug', 'Battery'],
+                answer: 'Battery'
+            }
+        },
+        {
+            id: 'oil_filter',
+            name: 'Oil Filter',
+            sprite: 'assets/parts/oil_filter.svg',
+            problem: 'The engine is running rough and the oil pressure light is on.',
+            quiz: {
+                question: 'Which part is responsible for cleaning the engine oil?',
+                options: ['Oil Filter', 'Air Filter', 'Fuel Filter'],
+                answer: 'Oil Filter'
+            }
+        }
     ];
 
-    function selectNextPart() {
-        if (remainingParts.length === 0) {
-            // All parts found, end game or level
-            gameOver(); // For now, just end the game
-            return;
-        }
-
-        const partIndex = Math.floor(Math.random() * remainingParts.length);
-        currentPart = remainingParts[partIndex];
-        remainingParts.splice(partIndex, 1); // Remove from list of remaining parts
-
-        currentWordDisplay.textContent = currentPart.name;
+    // --- Main Game Logic ---
+    function init() {
+        moneyDisplay.textContent = money;
+        loadingScreen.style.display = 'none';
+        startScreen.style.display = 'block';
+        startButton.addEventListener('click', startDay);
+        nextDayButton.addEventListener('click', startDay);
+        startRepairButton.addEventListener('click', startRepair);
     }
 
-    function renderHotspotsForDebug() {
-        diagramPlaceholder.querySelectorAll('.hotspot').forEach(el => el.remove());
-        PART_DATA.forEach(part => {
-            const hotspotEl = document.createElement('div');
-            hotspotEl.classList.add('hotspot');
-            hotspotEl.style.left = `${part.x}px`;
-            hotspotEl.style.top = `${part.y}px`;
-            hotspotEl.style.width = `${part.width}px`;
-            hotspotEl.style.height = `${part.height}px`;
-            diagramPlaceholder.appendChild(hotspotEl);
-        });
-    }
-
-    function startGame() {
+    function startDay() {
+        // Reset UI
+        endDayScreen.style.display = 'none';
         startScreen.style.display = 'none';
-        gameOverScreen.style.display = 'none';
-        gameContainer.style.display = 'flex';
+        gameContainer.style.display = 'block';
+        garageView.style.display = 'block';
+        engineBayView.style.display = 'none';
+        diagnosisView.style.display = 'block'; // Show diagnosis modal
 
-        score = 0;
-        timer = 60;
-        scoreDisplay.textContent = score;
+        // Reset timer
+        timer = 120;
         timerDisplay.textContent = timer;
-        remainingParts = [...PART_DATA];
-
-        renderHotspotsForDebug(); // For development/setup
-        selectNextPart();
-
+        if(timerInterval) clearInterval(timerInterval);
         timerInterval = setInterval(() => {
             timer--;
             timerDisplay.textContent = timer;
             if (timer <= 0) {
-                gameOver();
+                endDay();
             }
         }, 1000);
+
+        // Select a random problem
+        currentProblem = PART_DATA[Math.floor(Math.random() * PART_DATA.length)];
+        startDiagnosis();
     }
 
-    function handleCorrectGuess(clickX, clickY) {
-        score += 10; // 10 points for a correct guess
-        scoreDisplay.textContent = score;
-        showFeedback(true, clickX, clickY);
-        selectNextPart();
-    }
+    function startDiagnosis() {
+        problemDescription.textContent = currentProblem.problem;
+        quizContainer.innerHTML = ''; // Clear previous quiz
+        startRepairButton.style.display = 'none';
 
-    function handleIncorrectGuess(clickX, clickY) {
-        timer -= 5; // 5 second penalty
-        if (timer < 0) timer = 0;
-        timerDisplay.textContent = timer;
-        showFeedback(false, clickX, clickY);
-    }
+        const { question, options, answer } = currentProblem.quiz;
+        const questionEl = document.createElement('p');
+        questionEl.textContent = question;
+        quizContainer.appendChild(questionEl);
 
-    function showFeedback(isCorrect, x, y) {
-        const feedbackElement = document.createElement('div');
-        feedbackElement.classList.add('feedback-indicator');
-        feedbackElement.textContent = isCorrect ? '✔️' : '❌';
-        feedbackElement.style.left = `${x}px`;
-        feedbackElement.style.top = `${y}px`;
-        feedbackElement.style.color = isCorrect ? 'green' : 'red';
-
-        gameBoard.appendChild(feedbackElement);
-
-        feedbackElement.addEventListener('animationend', () => {
-            feedbackElement.remove();
+        options.forEach(option => {
+            const button = document.createElement('button');
+            button.textContent = option;
+            button.onclick = () => {
+                // Disable all buttons after one is clicked
+                quizContainer.querySelectorAll('button').forEach(btn => btn.disabled = true);
+                if (option === answer) {
+                    questionEl.textContent = 'Correct Diagnosis!';
+                    startRepairButton.style.display = 'block';
+                } else {
+                    questionEl.textContent = 'Wrong Diagnosis! Try again tomorrow.';
+                    // In a real game, you might add a penalty here
+                }
+            };
+            quizContainer.appendChild(button);
         });
     }
 
-    diagramPlaceholder.addEventListener('click', (e) => {
-        if (!currentPart) return;
+    function startRepair() {
+        diagnosisView.style.display = 'none';
+        garageView.style.display = 'none';
+        engineBayView.style.display = 'block';
 
-        // Get click coordinates relative to the placeholder
-        const rect = diagramPlaceholder.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        // Populate toolbox
+        partsToolbox.innerHTML = '<h3>Toolbox</h3>'; // Clear and add header
+        PART_DATA.forEach(part => {
+            const partImg = document.createElement('img');
+            partImg.src = part.sprite;
+            partImg.id = `part-${part.id}`;
+            partImg.classList.add('part-sprite');
+            partImg.draggable = true;
+            partImg.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', part.id);
+            });
+            partsToolbox.appendChild(partImg);
+        });
+    }
 
-        const { x: partX, y: partY, width, height } = currentPart;
+    engineBayView.addEventListener('dragover', (e) => {
+        e.preventDefault(); // Allow drop
+    });
 
-        if (x >= partX && x <= partX + width && y >= partY && y <= partY + height) {
-            handleCorrectGuess(x, y);
+    engineBayView.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const droppedPartId = e.dataTransfer.getData('text/plain');
+        if (droppedPartId === currentProblem.id) {
+            // Correct part dropped!
+            money += 100;
+            moneyDisplay.textContent = money;
+            alert('Repair Successful! You earned $100.');
+            endDay();
         } else {
-            handleIncorrectGuess(x, y);
+            // Wrong part
+            alert('Wrong part! Try again.');
         }
     });
 
-    function gameOver() {
+    function endDay() {
         clearInterval(timerInterval);
+        // In this simple version, earnings are just the total money accumulated this day.
+        // A more complex version would track starting money.
+        const earnings = money - (parseInt(totalMoneyDisplay.textContent) || 0);
+        earningsDisplay.textContent = earnings;
+        totalMoneyDisplay.textContent = money;
+
         gameContainer.style.display = 'none';
-        gameOverScreen.style.display = 'block';
-        finalScoreDisplay.textContent = score;
+        endDayScreen.style.display = 'block';
     }
 
-    startButton.addEventListener('click', startGame);
-    restartButton.addEventListener('click', startGame);
+    // Call init function to start the game flow
+    init();
 });
