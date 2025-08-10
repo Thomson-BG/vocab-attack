@@ -23,6 +23,10 @@ body {
     margin-bottom: 10px;
 }
 
+#score-board span {
+    margin: 0 15px;
+}
+
 #game-area {
     position: relative;
     width: 600px;
@@ -90,4 +94,46 @@ button:hover {
 
 #game-over-screen p {
     margin: 20px 0;
+}
+
+@keyframes word-cleared-animation {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: scale(1.4);
+        opacity: 0;
+        color: #ffc107;
+    }
+}
+
+.word.cleared {
+    /* Make sure it's on top of other words during animation */
+    z-index: 10;
+    animation: word-cleared-animation 0.3s ease-out forwards;
+}
+
+#level-up-notification {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3em;
+    font-weight: bold;
+    color: #ffc107;
+    text-shadow: 2px 2px 4px #000;
+    z-index: 20;
+}
+
+@keyframes fade-in-out {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    25% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    75% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); }
+}
+
+.level-up-animate {
+    display: block !important;
+    animation: fade-in-out 2s ease-in-out forwards;
 }
