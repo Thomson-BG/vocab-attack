@@ -1,0 +1,34 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="engine-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#868e96; stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#495057; stop-opacity:1" />
+    </linearGradient>
+    <style>
+      .engine-block { fill: url(#engine-grad); }
+      .hose { fill: #343a40; stroke: #212529; stroke-width: 2; }
+      .slot { fill: #dee2e6; stroke: #adb5bd; stroke-width: 1; stroke-dasharray: 5,5; }
+    </style>
+  </defs>
+
+  <!-- Main Engine Block -->
+  <rect class="engine-block" x="200" y="150" width="400" height="300" rx="10" />
+
+  <!-- Placeholder slots for parts -->
+  <!-- Radiator Slot -->
+  <rect class="slot" id="slot-radiator" x="50" y="100" width="100" height="350" />
+  <text x="70" y="285" font-family="Arial" font-size="14" fill="#868e96">Radiator</text>
+
+  <!-- Battery Slot -->
+  <rect class="slot" id="slot-battery" x="650" y="100" width="120" height="100" />
+  <text x="675" y="160" font-family="Arial" font-size="14" fill="#868e96">Battery</text>
+
+  <!-- Oil Filter Slot -->
+  <rect class="slot" id="slot-oil-filter" x="220" y="460" width="70" height="70" />
+  <text x="230" y="500" font-family="Arial" font-size="14" fill="#868e96">Oil Filter</text>
+
+  <!-- Hoses and wires for detail -->
+  <path class="hose" d="M 150 250 Q 200 250, 220 280" stroke-width="10" fill="none" />
+  <path class="hose" d="M 650 150 Q 600 150, 580 180" stroke-width="8" fill="none" />
+
+</svg>

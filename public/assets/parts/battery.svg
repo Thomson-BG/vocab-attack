@@ -1,0 +1,22 @@
+<svg width="120" height="100" viewBox="0 0 120 100" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .case { fill: #343a40; }
+    .terminal-pos { fill: #dc3545; }
+    .terminal-neg { fill: #007bff; }
+    .label { font-family: Arial, sans-serif; font-size: 10px; fill: white; }
+  </style>
+
+  <!-- Battery Case -->
+  <rect class="case" x="0" y="10" width="120" height="90" rx="5" />
+
+  <!-- Terminals -->
+  <rect class="terminal-pos" x="20" y="0" width="20" height="15" />
+  <rect class="terminal-neg" x="80" y="0" width="20" height="15" />
+
+  <!-- Terminal Labels -->
+  <text x="26" y="9" class="label">+</text>
+  <text x="86" y="9" class="label">-</text>
+
+  <!-- Battery Label -->
+  <text x="30" y="60" font-size="14" fill="#ced4da" font-weight="bold">12V AUTO</text>
+</svg>

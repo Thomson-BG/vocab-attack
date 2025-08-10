@@ -1,0 +1,11 @@
+<svg width="100" height="350" viewBox="0 0 100 350" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="grille" patternUnits="userSpaceOnUse" width="10" height="10">
+      <path d="M 0 0 L 10 0" stroke="#495057" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect x="0" y="0" width="100" height="350" fill="#ced4da" stroke="#495057" stroke-width="4" />
+  <rect x="5" y="5" width="90" height="340" fill="url(#grille)" />
+  <rect x="40" y="10" width="20" height="20" rx="5" fill="#343a40" />
+  <rect x="40" y="320" width="20" height="20" rx="5" fill="#343a40" />
+</svg>
